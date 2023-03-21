@@ -3,30 +3,25 @@ package com.example.demo.controller;
 import com.example.demo.model.dto.request.BookRequest;
 import com.example.demo.model.dto.response.BookResponse;
 import com.example.demo.service.BookService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.validation.Valid;
-
-import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.io.IOException;
 import java.util.logging.Logger;
 
 @RestController
 @RequestMapping("/api/users/{user_id}/books")
-
 public class BookAdminController {
 
     private final BookService bookService;
-    private final ModelMapper modelMapper;
     private Logger log =  Logger.getLogger(this.getClass().getName());
 
-    public BookAdminController(BookService bookService, ModelMapper modelMapper) {
+    public BookAdminController(BookService bookService) {
         this.bookService = bookService;
-        this.modelMapper = modelMapper;
     }
 
     @PostMapping
@@ -54,11 +49,14 @@ public class BookAdminController {
     @PutMapping("/{book_id}")
     public ResponseEntity<BookResponse> updateUserBook(@PathVariable(name = "user_id") String id,
                                                        @PathVariable(name = "book_id") Long bookId,
-                                                       @Valid @RequestBody BookRequest bookRequest,
-                                                       @RequestParam("image") MultipartFile multipartFile) {
+                                                       @Valid @RequestParam("book") String bookRequest,
+                                                       @RequestParam("image") MultipartFile multipartFile
+    ) throws IOException {
+
+        BookRequest book = new ObjectMapper().readValue(bookRequest,BookRequest.class);
 
         try {
-            BookResponse bookResponse = bookService.updateBook(bookId, bookRequest, multipartFile, id);
+            BookResponse bookResponse = bookService.updateBook(bookId, book, multipartFile, id);
             if (bookResponse != null)
                 return new ResponseEntity<>(bookResponse, HttpStatus.OK);
         } catch (IOException e) {
@@ -69,7 +67,8 @@ public class BookAdminController {
     }
 
     @DeleteMapping("/{book_id}")
-    public ResponseEntity<Boolean> deleteUserBook(@PathVariable(name = "user_id") String id, @PathVariable(name = "book_id") Long bookId) {
+    public ResponseEntity<Boolean> deleteUserBook(@PathVariable(name = "user_id") String id,
+                                                  @PathVariable(name = "book_id") Long bookId) {
 
         if (bookService.deleteBook(bookId, id))
             return new ResponseEntity<>(Boolean.TRUE, HttpStatus.OK);

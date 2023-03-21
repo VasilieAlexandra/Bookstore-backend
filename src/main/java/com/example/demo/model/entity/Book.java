@@ -31,6 +31,7 @@ public class Book {
     //@Lob
     @JdbcTypeCode(Types.BINARY)
     @Column(name = "image")
+    @ToString.Exclude
     private byte[] image;
     @Basic
     @Column(name = "price", nullable = false, precision = 0)
@@ -42,13 +43,13 @@ public class Book {
     @Column(name = "quantity", nullable = false)
     private Long quantity;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "book_category",
             joinColumns = @JoinColumn(name = "id_book"),
             inverseJoinColumns = @JoinColumn(name = "id_category"))
     @ToString.Exclude
-    private Set<Category> bookCategories;
+    private Set<Category> categories;
     @OneToMany(mappedBy = "bookByIdBook")
     @ToString.Exclude
     private Set<OrderLine> orderLinesById;

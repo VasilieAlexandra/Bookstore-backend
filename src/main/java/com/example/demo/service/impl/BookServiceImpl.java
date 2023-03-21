@@ -19,12 +19,15 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
+import java.util.logging.Logger;
 
 @Service
 public class BookServiceImpl implements BookService {
     private final BookRepository bookRepository;
     private final ModelMapper modelMapper;
     private final FirebaseService firebaseService;
+    private Logger log =  Logger.getLogger(this.getClass().getName());
+
 
     public BookServiceImpl(BookRepository bookRepository, ModelMapper modelMapper, FirebaseService firebaseService) {
         this.bookRepository = bookRepository;
@@ -43,7 +46,7 @@ public class BookServiceImpl implements BookService {
         if (!multipartFile.isEmpty())
             dbBook.setImage(multipartFile.getBytes());
         else throw new RuntimeException("No image uploaded");
-        dbBook.setBookCategories(newBook.getCategories());
+        dbBook.setCategories(newBook.getCategories());
 
         this.bookRepository.save(dbBook);
 
@@ -54,13 +57,20 @@ public class BookServiceImpl implements BookService {
                                       Double minPrice, Double maxPrice, BookOrderEnum order) {
 
         List<Book> allBooks = bookRepository.findAll();
+        log.warning(allBooks.toString());
+//        log.warning("seller: "+idSeller );
+//        log.warning("author: "+author.isEmpty() );
+//        log.warning("category: "+category.isEmpty() );
+//        log.warning("minPrice: "+minPrice );
+//        log.warning("maxPrice: "+maxPrice );
 
         Predicate<Book> bookPredicate = BookFilterUtil.createBookFilter(idSeller, author, category, minPrice, maxPrice);
-        Comparator<Book> comp = BookSortUtil.createBookSorted(order);
+        //Comparator<Book> comp = BookSortUtil.createBookSorted(order);
+
 
         return allBooks.stream()
                 .filter(bookPredicate)
-                .sorted(comp)
+                //.sorted(comp)
                 .map(book -> this.modelMapper.map(book, BookResponse.class))
                 .toList();
     }
@@ -92,7 +102,7 @@ public class BookServiceImpl implements BookService {
         if (book.isPresent()) {
             Book foundBook = book.get();
             if (foundBook.getIdOwner().equals(sellerId)) {
-                foundBook.setBookCategories(updatedBook.getCategories());
+                foundBook.setCategories(updatedBook.getCategories());
                 foundBook.setImage(multipartFile.getBytes());
                 foundBook.setName(updatedBook.getName());
                 foundBook.setAuthor(updatedBook.getAuthor());

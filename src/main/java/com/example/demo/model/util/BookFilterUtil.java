@@ -21,7 +21,7 @@ public class BookFilterUtil{
            bookPredicate = bookPredicate.and(authorPredicate);
        }
        if (!category.isEmpty()) {
-           Predicate<Book> categoryPredicate = book -> category.stream().anyMatch(book.getBookCategories()::contains);
+           Predicate<Book> categoryPredicate = book -> category.stream().anyMatch(book.getCategories()::contains);
            bookPredicate = bookPredicate.and(categoryPredicate);
        }
        if (minPrice != null) {

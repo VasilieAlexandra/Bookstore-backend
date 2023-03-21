@@ -20,9 +20,14 @@ public class Category {
     @Basic
     @Column(name = "name", nullable = false, length = 100)
     private String name;
-    @ManyToMany(mappedBy = "bookCategories")
+    @ManyToMany(mappedBy = "categories")
     @ToString.Exclude
     private Set<Book> books;
+
+    public Category(Long id, String name) {
+        this.id=id;
+        this.name=name;
+    }
 
     @Override
     public boolean equals(Object o) {

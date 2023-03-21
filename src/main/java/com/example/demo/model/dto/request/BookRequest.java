@@ -13,8 +13,11 @@ import java.util.Set;
 @ToString
 @Builder
 public class BookRequest {
+    private Long id;
     private String name;
     private String author;
+    @ToString.Exclude
+    private byte[] image;
     private Double price;
     private Long quantity;
     private Set<Category> categories;

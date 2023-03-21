@@ -35,4 +35,11 @@ public class CategoryServiceImpl implements CategoryService {
                 .map(c-> this.modelMapper.map(c, CategoryDto.class))
                 .toList();
     }
+
+    @Override
+    public List<CategoryDto> getCategoriesNotInBook(Long bookId, List<Long> categories) {
+        return categoryRepository.getCategoriesNotInBook(bookId, categories).stream()
+                .map(c-> this.modelMapper.map(c, CategoryDto.class))
+                .toList();
+    }
 }

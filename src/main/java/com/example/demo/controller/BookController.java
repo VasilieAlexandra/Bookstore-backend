@@ -30,12 +30,12 @@ public class BookController {
         return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
     @GetMapping
-    public ResponseEntity<List<BookResponse>> getAllTasksForUser(@RequestParam(required = false) String idSeller,
-                                                                 @RequestParam(required = false, defaultValue = "[]") List<String> author,
-                                                                 @RequestParam(required = false, defaultValue = "[]") List<Category> category,
+    public ResponseEntity<List<BookResponse>> getAllTasksForUser(@RequestParam(required = false, name = "seller", defaultValue = "") String idSeller,
+                                                                 @RequestParam(required = false, defaultValue = "") List<String> author,
+                                                                 @RequestParam(required = false, defaultValue = "") List<Category> category,
                                                                  @RequestParam(required = false) Double minPrice,
                                                                  @RequestParam(required = false) Double maxPrice,
-                                                                 @RequestParam(required = false, defaultValue = "NoOrder") BookOrderEnum order) {
+                                                                 @RequestParam(required = false, defaultValue = "NO_ORDER") BookOrderEnum order) {
 
         List<BookResponse> books = bookService.findAll(idSeller,author,category,minPrice,maxPrice,order);
         if(books != null) {
