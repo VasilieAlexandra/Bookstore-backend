@@ -1,6 +1,5 @@
 package com.example.demo.model.entity;
 
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,17 +13,9 @@ import java.util.Objects;
 @NoArgsConstructor
 @AllArgsConstructor
 public class OrderLinePK implements Serializable {
-    @Column(name = "id_order", nullable = false, insertable = false, updatable = false)
-    @Basic
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idOrder;
-    @Column(name = "id_book", nullable = false, insertable = false, updatable = false)
-    @Basic
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idBook;
 
+    private Long idOrder;
+    private Long idBook;
 
     @Override
     public boolean equals(Object o) {

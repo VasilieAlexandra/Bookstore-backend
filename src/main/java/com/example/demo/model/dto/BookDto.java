@@ -13,5 +13,5 @@ public class BookDto {
     private String author;
     @ToString.Exclude
     private byte[] image;
-    private Double price;
+    private Long price;
 }

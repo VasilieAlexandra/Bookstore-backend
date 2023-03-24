@@ -8,7 +8,8 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface ShippingAddressRepository extends JpaRepository<ShippingAddress,Long> {
+public interface ShippingAddressRepository extends JpaRepository<ShippingAddress, Long> {
     Optional<ShippingAddress> findByIdAndIdUser(Long id, String userId);
+
     List<ShippingAddress> getAllByIdUser(String userId);
 }

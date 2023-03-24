@@ -1,8 +1,8 @@
 package com.example.demo.model.entity;
 
+import jakarta.persistence.*;
 import lombok.*;
 
-import jakarta.persistence.*;
 import java.util.Objects;
 import java.util.Set;
 
@@ -17,17 +17,12 @@ public class Category {
     @Id
     @Column(name = "id", nullable = false)
     private Long id;
-    @Basic
+
     @Column(name = "name", nullable = false, length = 100)
     private String name;
-    @ManyToMany(mappedBy = "categories")
+    @ManyToMany(mappedBy = "categories", fetch = FetchType.EAGER)
     @ToString.Exclude
     private Set<Book> books;
-
-    public Category(Long id, String name) {
-        this.id=id;
-        this.name=name;
-    }
 
     @Override
     public boolean equals(Object o) {

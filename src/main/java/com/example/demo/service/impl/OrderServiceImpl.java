@@ -7,6 +7,7 @@ import com.example.demo.repository.OrderRepository;
 import com.example.demo.service.FirebaseService;
 import com.example.demo.service.OrderLineService;
 import com.example.demo.service.OrderService;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -23,13 +24,14 @@ public class OrderServiceImpl implements OrderService {
     private final FirebaseService firebaseService;
 
     @Override
+    @Transactional
     public OrderResponse saveOrder(OrderRequest newOrder, String userId) {
         Order order = modelMapper.map(newOrder, Order.class);
 
         if (firebaseService.checkUserExists(userId)) {
             order.setIdUser(userId);
             Order savedOrder = orderRepository.save(order);
-            orderLineService.saveAllOrderLines(savedOrder.getId(), newOrder.getOrderLinesById());
+            orderLineService.saveAllOrderLines(savedOrder.getId(), newOrder.getOrderLines());
             return modelMapper.map(order, OrderResponse.class);
         }
         return null;
@@ -55,6 +57,11 @@ public class OrderServiceImpl implements OrderService {
                     .toList();
         }
         return null;
+    }
+
+    @Override
+    public Long getTotalOrderPrice(Long orderId, String userId) {
+        return orderRepository.getTotalOrderPrice(orderId, userId);
     }
 
 }

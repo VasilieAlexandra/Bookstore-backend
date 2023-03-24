@@ -1,8 +1,7 @@
 package com.example.demo.model.entity;
 
-import lombok.*;
-
 import jakarta.persistence.*;
+import lombok.*;
 import org.hibernate.annotations.JdbcTypeCode;
 
 import java.sql.Types;
@@ -21,25 +20,24 @@ public class Book {
     @Id
     @Column(name = "id", nullable = false)
     private Long id;
-    @Basic
+
     @Column(name = "name", nullable = false, length = 100)
     private String name;
-    @Basic
+
     @Column(name = "author", nullable = false, length = 100)
     private String author;
-    @Basic
-    //@Lob
+
     @JdbcTypeCode(Types.BINARY)
     @Column(name = "image")
     @ToString.Exclude
     private byte[] image;
-    @Basic
+
     @Column(name = "price", nullable = false, precision = 0)
-    private Double price;
-    @Basic
-    @Column(name = "id_owner", nullable = false,length = 255)
+    private Long price;
+
+    @Column(name = "id_owner", nullable = false, length = 255)
     private String idOwner;
-    @Basic
+
     @Column(name = "quantity", nullable = false)
     private Long quantity;
 
@@ -50,16 +48,19 @@ public class Book {
             inverseJoinColumns = @JoinColumn(name = "id_category"))
     @ToString.Exclude
     private Set<Category> categories;
-    @OneToMany(mappedBy = "bookByIdBook")
+    @OneToMany(mappedBy = "book")
     @ToString.Exclude
-    private Set<OrderLine> orderLinesById;
+    private Set<OrderLine> order;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Book book = (Book) o;
-        return Objects.equals(id, book.id) && Objects.equals(name, book.name) && Objects.equals(author, book.author) && Arrays.equals(image, book.image) && Objects.equals(price, book.price) && Objects.equals(idOwner, book.idOwner) && Objects.equals(quantity, book.quantity);
+        return Objects.equals(id, book.id) && Objects.equals(name, book.name)
+                && Objects.equals(author, book.author) && Arrays.equals(image, book.image)
+                && Objects.equals(price, book.price) && Objects.equals(idOwner, book.idOwner)
+                && Objects.equals(quantity, book.quantity);
     }
 
     @Override

@@ -6,15 +6,12 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import java.util.Collections;
 import java.util.List;
 
 @Configuration
 @EnableWebSecurity
-public class WebSecurityConfig{
+public class WebSecurityConfig {
 
     @Bean
     public SecurityFilterChain securityConfig(HttpSecurity http) throws Exception {
@@ -22,16 +19,16 @@ public class WebSecurityConfig{
         CorsConfiguration corsConfiguration = new CorsConfiguration();
         corsConfiguration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
         corsConfiguration.setAllowedOrigins(List.of("http://localhost:3000/"));
-        corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS", "HEAD"));
+        corsConfiguration.setAllowedMethods(List.of("HEAD", "OPTIONS", "GET", "POST", "PUT", "DELETE", "PATCH"));
         corsConfiguration.setAllowCredentials(true);
+        corsConfiguration.setAllowedOriginPatterns(List.of("http://localhost:3000/*"));
         corsConfiguration.setExposedHeaders(List.of("Authorization"));
 
 
         http.authorizeHttpRequests()
-                .requestMatchers("/api/books/**","/api/categories/**").permitAll()
+                .requestMatchers("/api/books/**", "/api/categories/**").permitAll()
                 .anyRequest().authenticated()
-                .and()
-                .csrf().disable()
+                .and().csrf().disable()
                 .cors().configurationSource(request -> corsConfiguration);
 
         http.oauth2ResourceServer()
@@ -39,19 +36,6 @@ public class WebSecurityConfig{
 
 
         return http.build();
-    }
-
-    @Bean
-    public WebMvcConfigurer corsConfigurer() {
-        return new WebMvcConfigurer() {
-            @Override
-            public void addCorsMappings(CorsRegistry registry) {
-                registry
-                        .addMapping("/**")
-                        .allowedOriginPatterns("http://localhost:3000/")
-                        .allowedMethods("HEAD", "GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS");
-            }
-        };
     }
 
 }

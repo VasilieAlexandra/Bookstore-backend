@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @Service
@@ -21,14 +20,15 @@ public class ShippingAddressServiceImpl implements ShippingAddressService {
     private final ShippingAddressRepository shippingAddressRepository;
     private final ModelMapper modelMapper;
     private final FirebaseService firebaseService;
+
     @Override
     public ShippingAddressDto saveAddress(String userId, ShippingAddressDto newAddress) {
-        ShippingAddress shippingAddress = modelMapper.map(newAddress,ShippingAddress.class);
+        ShippingAddress shippingAddress = modelMapper.map(newAddress, ShippingAddress.class);
 
         Logger logger = Logger.getLogger(this.getClass().getName());
         logger.warning(userId);
 
-        if(userId!= null && firebaseService.checkUserExists(userId)) {
+        if (userId != null && firebaseService.checkUserExists(userId)) {
             shippingAddress.setIdUser(userId);
             shippingAddressRepository.save(shippingAddress);
             return modelMapper.map(shippingAddress, ShippingAddressDto.class);
@@ -38,7 +38,7 @@ public class ShippingAddressServiceImpl implements ShippingAddressService {
 
     @Override
     public ShippingAddressDto updateAddress(String userId, ShippingAddressDto updatedAddress) {
-        if(firebaseService.checkUserExists(userId)) {
+        if (firebaseService.checkUserExists(userId)) {
             Optional<ShippingAddress> dbAddress = shippingAddressRepository.findByIdAndIdUser(updatedAddress.getId(), userId);
             if (dbAddress.isPresent()) {
                 ShippingAddress savedAddress = dbAddress.get();
@@ -55,7 +55,7 @@ public class ShippingAddressServiceImpl implements ShippingAddressService {
 
     @Override
     public Boolean deleteAddress(String userId, Long addressId) {
-        if(firebaseService.checkUserExists(userId)) {
+        if (firebaseService.checkUserExists(userId)) {
             Optional<ShippingAddress> dbAddress = shippingAddressRepository.findByIdAndIdUser(addressId, userId);
             if (dbAddress.isPresent()) {
                 shippingAddressRepository.delete(dbAddress.get());
@@ -67,7 +67,7 @@ public class ShippingAddressServiceImpl implements ShippingAddressService {
 
     @Override
     public ShippingAddressDto getAddressById(String userId, Long addressId) {
-        if(firebaseService.checkUserExists(userId)) {
+        if (firebaseService.checkUserExists(userId)) {
             Optional<ShippingAddress> dbAddress = shippingAddressRepository.findByIdAndIdUser(addressId, userId);
             return dbAddress
                     .map(shippingAddress -> modelMapper.map(shippingAddress, ShippingAddressDto.class))

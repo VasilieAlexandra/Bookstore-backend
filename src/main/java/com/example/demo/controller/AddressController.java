@@ -2,7 +2,6 @@ package com.example.demo.controller;
 
 import com.example.demo.model.dto.ShippingAddressDto;
 import com.example.demo.service.ShippingAddressService;
-
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

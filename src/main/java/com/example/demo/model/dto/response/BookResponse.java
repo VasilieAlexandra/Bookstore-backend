@@ -3,7 +3,6 @@ package com.example.demo.model.dto.response;
 import com.example.demo.model.dto.CategoryDto;
 import lombok.*;
 
-import java.util.List;
 import java.util.Set;
 
 @NoArgsConstructor
@@ -19,7 +18,7 @@ public class BookResponse {
     private String author;
     @ToString.Exclude
     private byte[] image;
-    private Double price;
+    private Long price;
     private Long quantity;
     private Set<CategoryDto> categories;
 }

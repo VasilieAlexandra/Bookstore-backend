@@ -1,21 +1,18 @@
 package com.example.demo.controller;
 
 import com.example.demo.model.dto.CategoryDto;
-import com.example.demo.model.entity.Category;
+import com.example.demo.model.dto.response.BookResponse;
 import com.example.demo.service.CategoryService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.logging.Logger;
 
 @RestController
 @RequestMapping("/api/categories")
-
 public class CategoryController {
     private final CategoryService categoryService;
-    private Logger log =  Logger.getLogger(this.getClass().getName());
 
 
     public CategoryController(CategoryService categoryService) {
@@ -42,17 +39,29 @@ public class CategoryController {
 
         return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
     @GetMapping("/{category_id}/exclude")
     public ResponseEntity<List<CategoryDto>> getAllCategoriesExclude(@PathVariable(name = "category_id") Long id,
-                                                                     @RequestParam(name="exclude", defaultValue = "") List<String> categories) {
+                                                                     @RequestParam(name = "exclude", defaultValue = "") List<String> categories) {
 
         List<Long> ids = categories.stream().map(Long::parseLong).toList();
 
-        List<CategoryDto> categoryDtoList = categoryService.getCategoriesNotInBook(id,ids);
-        log.warning(categories.toString());
+        List<CategoryDto> categoryDtoList = categoryService.getCategoriesNotInBook(id, ids);
 
         if (categoryDtoList != null)
             return new ResponseEntity<>(categoryDtoList, HttpStatus.OK);
+
+        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @GetMapping("/{category_id}/books")
+
+    public ResponseEntity<List<BookResponse>> getBooksByCategory(@PathVariable(name = "category_id") Long id,
+                                                                 @RequestParam(required = false, name = "id", defaultValue = "") String idUser) {
+
+        List<BookResponse> booksByCategory = categoryService.getBooksByCategory(id, idUser);
+        if (booksByCategory != null)
+            return new ResponseEntity<>(booksByCategory, HttpStatus.OK);
 
         return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }

@@ -10,10 +10,6 @@ import lombok.*;
 @ToString
 @Builder
 public class OrderLineResponse {
-//    private Long idBook;
-//    private String bookName;
-//    private String bookAuthor;
-//    private Double bookPrice;
-    private BookDto bookByIdBook;
+    private BookDto book;
     private Long quantity;
 }
